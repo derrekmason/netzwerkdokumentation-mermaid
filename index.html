@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MD-Viewer – Netzwerkdokumentation</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: false, theme: 'neutral' });</script>
+<style>
+body { font-family: system-ui, Arial, sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; background: #fff; color: #000; }
+pre { background: #f0f0f0; padding: 1rem; border-radius: 8px; overflow-x: auto; border: 1px solid #000; }
+#status { color: #666; }
+</style>
+</head>
+<body>
+<div id="status">Lade Netzwerkdokumentation.md …</div>
+<div id="content"></div>
+<script>
+(async () => {
+  const mdFile = 'Netzwerkdokumentation.md';
+  try {
+    const res = await fetch(mdFile + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' für ' + mdFile);
+    const md = await res.text();
+    document.getElementById('content').innerHTML = marked.parse(md);
+    document.getElementById('status').remove();
+    // marked erzeugt: <pre><code class="language-mermaid"> -> zu <pre class="mermaid"> umwandeln
+    document.querySelectorAll('pre code.language-mermaid').forEach(code => {
+      const pre = code.parentElement;
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent;
+      pre.replaceWith(div);
+    });
+    await mermaid.run();
+  } catch (e) {
+    document.getElementById('status').textContent =
+      'Konnte ' + mdFile + ' nicht per fetch() laden: ' + e.message +
+      ' (file:// blockt fetch per CORS – über http-Server öffnen, z. B. `python3 -m http.server`).';
+  }
+})();
+</script>
+</body>
+</html>
