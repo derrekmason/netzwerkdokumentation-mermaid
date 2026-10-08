@@ -18,11 +18,11 @@ graph TD
         Drucker([Netzwerkdrucker<br/>192.168.1.20])
     end
 
-    subgraph WLAN ["WLAN - 192.168.2.0/24"]
-        AccessPoint{{WLAN-Access-Point<br/>192.168.2.1}}
-        Notebook1([Notebook 1<br/>192.168.2.11])
-        Notebook2([Notebook 2<br/>192.168.2.12])
-        Notebook3([Notebook 3<br/>192.168.2.13])
+    subgraph WLAN ["WLAN - 192.168.1.2"]
+        AccessPoint{{WLAN-Access-Point<br/>192.168.1.2}}
+        Notebook1([Notebook 1<br/>192.168.1.127])
+        Notebook2([Notebook 2<br/>192.168.1.128])
+        Notebook3([Notebook 3<br/>192.168.1.129])
     end
 
     Internet --> Router
